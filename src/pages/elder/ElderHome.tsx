@@ -128,7 +128,7 @@ export default function ElderHome() {
     //     let motionCheckInterval: NodeJS.Timeout | null = null;
 
     //     const handleMotion = (event: DeviceMotionEvent) => {
-    //         const current = event.accelerationIncludingGravity;
+    //         const current = event.accelerationIncludingGreenishty;
     //         if (!current) return;
 
     //         const { x, y, z } = current;
@@ -335,7 +335,7 @@ export default function ElderHome() {
             alert(`${selectedService} ${t.bookSuccess}${itemsText}`);
 
             // Simulate assigning a volunteer and open tracking
-            setVolunteer({ name: 'Ravi', eta: 7 });
+            setVolunteer({ name: 'reenish', eta: 7 });
             setShowTracking(true);
 
             setSelectedService(null);

@@ -6,7 +6,7 @@ export default function FamilySupport() {
   const navigate = useNavigate();
 
   const [family] = useState([
-    { name: "Ravi Kumar", relation: "Son", phone: "9876543211" },
+    { name: "reenish Kumar", relation: "Son", phone: "9876543211" },
     { name: "Lakshmi", relation: "Daughter", phone: "9876543212" },
   ]);
 

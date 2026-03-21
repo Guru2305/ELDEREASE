@@ -18,7 +18,7 @@ export default function ElderApp() {
     let shakeCount = 0;
 
     const handleMotion = (event: DeviceMotionEvent) => {
-      const { x = 0, y = 0, z = 0 } = event.accelerationIncludingGravity || {};
+      const { x = 0, y = 0, z = 0 } = event.accelerationIncludingGreenishty || {};
 
       const deltaX = Math.abs(x - lastX);
       const deltaY = Math.abs(y - lastY);

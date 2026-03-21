@@ -70,7 +70,7 @@ const ISSUES: Issue[] = [
         type: "Behavior",
         severity: "Critical",
         description: "Rude behavior reported by the elder's family member during a call.",
-        reportedBy: "Ravi (Family)",
+        reportedBy: "reenish (Family)",
         date: "1 week ago",
         status: "Open"
     },
