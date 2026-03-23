@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import RoleSelection from './pages/RoleSelection';
 
 import ElderHome from './pages/elder/ElderHome';
+import ProfilePage from './pages/elder/ProfilePage';
 
 import AdminLayout from './pages/admin/admin/components/AdminLayout';
 import AdminDashboard from './pages/admin/admin/AdminDashboard';
@@ -25,6 +26,7 @@ function App() {
       <Routes>
         <Route path="/" element={<RoleSelection />} />
         <Route path="/elder" element={<ElderHome />} />
+        <Route path="/elder/profile" element={<ProfilePage />} />
 
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<AdminDashboard />} />
