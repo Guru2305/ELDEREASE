@@ -21,6 +21,8 @@ import familysupport from './pages/elder/familysupport';
 import AdminLayout from './pages/admin/admin/components/AdminLayout';
 import AdminDashboard from './pages/admin/admin/AdminDashboard';
 import AdminHelpCenter from './pages/admin/admin/AdminHelpCenter';
+import JobAssignment from './pages/admin/admin/JobAssignment';
+import VolunteerManagement from './pages/admin/admin/VolunteerManagement';
 
 import VolunteerLayout from './pages/volunteer/components/VolunteerLayout';
 import VolunteerDashboard from './pages/volunteer/VolunteerDashboard';
@@ -56,8 +58,8 @@ function App() {
 
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<AdminDashboard />} />
-          <Route path="jobs" element={<AdminDashboard />} />
-          <Route path="volunteers" element={<div className="p-6"><h2>Volunteer Management (Coming Soon)</h2></div>} />
+          <Route path="jobs" element={<JobAssignment />} />
+          <Route path="volunteers" element={<VolunteerManagement />} />
           <Route path="support" element={<AdminHelpCenter />} />
         </Route>
 

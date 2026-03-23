@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { MapPin, Smartphone, Users, Navigation, Filter, User, Clock, HeartPulse, Languages, Zap, ShieldAlert } from 'lucide-react';
-import MockMap from '../../components/shared/MockMap';
+import MockMap from '../../../components/shared/MockMap';
 
 // Enriched Data Types
 interface Job {
