@@ -16,7 +16,7 @@ import Refer from './pages/elder/Refer';
 import Rewards from './pages/elder/Rewards';
 import Safety from './pages/elder/Safety';
 import TransportPage from './pages/elder/TransportPage';
-import familysupport from './pages/elder/familysupport';
+import FamilySupport from './pages/elder/familysupport';
 
 import AdminLayout from './pages/admin/admin/components/AdminLayout';
 import AdminDashboard from './pages/admin/admin/AdminDashboard';
@@ -54,7 +54,7 @@ function App() {
         <Route path="/elder/rewards" element={<Rewards />} />
         <Route path="/elder/safety" element={<Safety />} />
         <Route path="/elder/transport" element={<TransportPage />} />
-        <Route path="/elder/family-support" element={<familysupport />} />
+        <Route path="/elder/family-support" element={<FamilySupport />} />
 
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<AdminDashboard />} />
