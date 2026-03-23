@@ -20,7 +20,7 @@ export default function ProfilePage() {
 
   // MENU
   const menuItems = [
-    { icon: <User className="w-6 h-6" />, label: "Family Support", to: "/elder/family" },
+    { icon: <User className="w-6 h-6" />, label: "Family Support", to: "/elder/family-support" },
     { icon: <HelpCircle className="w-6 h-6" />, label: "Help Center", to: "/elder/help" },
     { icon: <CreditCard className="w-6 h-6" />, label: "Payments", to: "/elder/payment" },
     { icon: <Clock className="w-6 h-6" />, label: "My Bookings", to: "/elder/bookings" },
