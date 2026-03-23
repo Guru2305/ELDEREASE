@@ -4,6 +4,19 @@ import RoleSelection from './pages/RoleSelection';
 
 import ElderHome from './pages/elder/ElderHome';
 import ProfilePage from './pages/elder/ProfilePage';
+import Bookings from './pages/elder/Bookings';
+import CallSupportPage from './pages/elder/CallSupportPage';
+import Help from './pages/elder/Help';
+import GroceriesPage from './pages/elder/GroceriesPage';
+import HouseHelpPage from './pages/elder/HouseHelpPage';
+import MedicinesPage from './pages/elder/MedicinesPage';
+import Membership from './pages/elder/Membership';
+import Payment from './pages/elder/Payment';
+import Refer from './pages/elder/Refer';
+import Rewards from './pages/elder/Rewards';
+import Safety from './pages/elder/Safety';
+import TransportPage from './pages/elder/TransportPage';
+import familysupport from './pages/elder/familysupport';
 
 import AdminLayout from './pages/admin/admin/components/AdminLayout';
 import AdminDashboard from './pages/admin/admin/AdminDashboard';
@@ -27,6 +40,19 @@ function App() {
         <Route path="/" element={<RoleSelection />} />
         <Route path="/elder" element={<ElderHome />} />
         <Route path="/elder/profile" element={<ProfilePage />} />
+        <Route path="/elder/bookings" element={<Bookings />} />
+        <Route path="/elder/call-support" element={<CallSupportPage />} />
+        <Route path="/elder/help" element={<Help />} />
+        <Route path="/elder/groceries" element={<GroceriesPage />} />
+        <Route path="/elder/house-help" element={<HouseHelpPage />} />
+        <Route path="/elder/medicines" element={<MedicinesPage />} />
+        <Route path="/elder/membership" element={<Membership />} />
+        <Route path="/elder/payment" element={<Payment />} />
+        <Route path="/elder/refer" element={<Refer />} />
+        <Route path="/elder/rewards" element={<Rewards />} />
+        <Route path="/elder/safety" element={<Safety />} />
+        <Route path="/elder/transport" element={<TransportPage />} />
+        <Route path="/elder/family-support" element={<familysupport />} />
 
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<AdminDashboard />} />
