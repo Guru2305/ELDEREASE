@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Bell, User, AlertTriangle } from 'lucide-react';
+import { X, Bell, User, AlertTriangle, MapPin } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 interface NotificationPopupProps {
@@ -8,9 +8,13 @@ interface NotificationPopupProps {
     elderName: string;
     taskType: string;
     taskId?: number;
+    location?: string;
+    urgent?: boolean;
+    message?: string;
+    emergency_severity?: 'LOW' | 'MEDIUM' | 'HIGH';
 }
 
-export default function NotificationPopup({ isVisible, onClose, elderName, taskType, taskId }: NotificationPopupProps) {
+export default function NotificationPopup({ isVisible, onClose, elderName, taskType, taskId, location, urgent, message, emergency_severity }: NotificationPopupProps) {
     const [playSound, setPlaySound] = useState(false);
     const navigate = useNavigate();
 
@@ -118,12 +122,21 @@ export default function NotificationPopup({ isVisible, onClose, elderName, taskT
                 {/* Header with Icon */}
                 <div className="flex items-center justify-between mb-6">
                     <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-                            <Bell className="w-6 h-6 text-blue-600 animate-pulse" />
+                        <div className={`w-12 h-12 rounded-full flex items-center justify-center ${
+                            urgent ? 'bg-red-100' : 'bg-blue-100'
+                        }`}>
+                            <Bell className={`w-6 h-6 animate-pulse ${
+                                urgent ? 'text-red-600' : 'text-blue-600'
+                            }`} />
                         </div>
                         <div>
-                            <h3 className="text-xl font-bold text-slate-800">New Service Request!</h3>
-                            <p className="text-sm text-slate-500">Tap to view details</p>
+                            <h3 className="text-xl font-bold text-slate-800">
+                                {urgent ? '🚨 Emergency Request!' : 'New Service Request!'}
+                            </h3>
+                            <p className="text-sm text-slate-500">
+                                {emergency_severity === 'HIGH' ? 'High Priority' : 
+                                 emergency_severity === 'MEDIUM' ? 'Medium Priority' : 'Normal Priority'}
+                            </p>
                         </div>
                     </div>
                     <button
@@ -135,17 +148,40 @@ export default function NotificationPopup({ isVisible, onClose, elderName, taskT
                 </div>
                 
                 {/* Elder Information */}
-                <div className="bg-blue-50 rounded-xl p-6 mb-6">
-                    <div className="flex items-center gap-4">
-                        <div className="w-16 h-16 bg-blue-200 rounded-full flex items-center justify-center">
-                            <User className="w-8 h-8 text-blue-700" />
+                <div className={`${urgent ? 'bg-red-50' : 'bg-blue-50'} rounded-xl p-6 mb-6`}>
+                    <div className="flex items-center gap-4 mb-4">
+                        <div className={`w-16 h-16 rounded-full flex items-center justify-center ${
+                            urgent ? 'bg-red-200' : 'bg-blue-200'
+                        }`}>
+                            <User className={`w-8 h-8 ${urgent ? 'text-red-700' : 'text-blue-700'}`} />
                         </div>
                         <div className="flex-1">
-                            <h4 className="text-lg font-semibold text-blue-800 mb-1">{elderName}</h4>
-                            <p className="text-blue-600">needs help with</p>
-                            <p className="text-xl font-bold text-blue-900">{taskType}</p>
+                            <h4 className={`text-lg font-semibold mb-1 ${
+                                urgent ? 'text-red-800' : 'text-blue-800'
+                            }`}>{elderName}</h4>
+                            <p className={urgent ? 'text-red-600' : 'text-blue-600'}>needs help with</p>
+                            <p className={`text-xl font-bold ${
+                                urgent ? 'text-red-900' : 'text-blue-900'
+                            }`}>{taskType}</p>
                         </div>
                     </div>
+                    
+                    {/* Location */}
+                    {location && (
+                        <div className="flex items-center gap-2 mb-3">
+                            <MapPin className={`w-4 h-4 ${urgent ? 'text-red-600' : 'text-blue-600'}`} />
+                            <p className={`text-sm ${urgent ? 'text-red-700' : 'text-blue-700'}`}>{location}</p>
+                        </div>
+                    )}
+                    
+                    {/* Message */}
+                    {message && (
+                        <div className={`p-3 rounded-lg ${
+                            urgent ? 'bg-red-100' : 'bg-blue-100'
+                        }`}>
+                            <p className={`text-sm ${urgent ? 'text-red-800' : 'text-blue-800'}`}>"{message}"</p>
+                        </div>
+                    )}
                 </div>
                 
                 {/* Action Buttons */}

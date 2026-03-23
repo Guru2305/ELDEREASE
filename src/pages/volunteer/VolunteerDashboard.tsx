@@ -192,7 +192,11 @@ export default function VolunteerDashboard() {
                     setCurrentNotification({
                         elderName: randomTask.elderName || 'Unknown',
                         taskType: randomTask.title || 'Service Request',
-                        taskId: randomTask.id
+                        taskId: randomTask.id,
+                        location: randomTask.location || 'Unknown Location',
+                        urgent: randomTask.urgent || false,
+                        message: randomTask.message || 'No additional message provided',
+                        emergency_severity: randomTask.emergency_severity || 'LOW'
                     });
                     setShowNotification(true);
                 }
@@ -482,6 +486,10 @@ export default function VolunteerDashboard() {
         elderName={currentNotification?.elderName || 'Unknown'}
         taskType={currentNotification?.taskType || 'Service Request'}
         taskId={currentNotification?.taskId}
+        location={currentNotification?.location}
+        urgent={currentNotification?.urgent}
+        message={currentNotification?.message}
+        emergency_severity={currentNotification?.emergency_severity}
     />
     </DutyProtection>
 );
