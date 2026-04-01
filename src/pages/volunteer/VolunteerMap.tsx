@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
-import { MapPin, Navigation, Clock } from 'lucide-react';
 import DutyProtection from './components/DutyProtection';
 import RealMap from '../../components/shared/RealMap';
-import { getCurrentLocation, watchLocation, processAndRankRequests } from './algorithms/PriorityScoring';
+import { getCurrentLocation, watchLocation } from './algorithms/PriorityScoring';
 
 // All request locations data with coordinates and algorithmic features
 const allRequestLocations = [
@@ -234,15 +233,6 @@ export default function VolunteerMap() {
     const [isTrackingLocation, setIsTrackingLocation] = useState(false);
     const [locationError, setLocationError] = useState<string | null>(null);
     const [priorityMarkers, setPriorityMarkers] = useState<any[]>([]);
-
-    // Volunteer profile
-    const volunteerProfile = {
-        volunteer_id: 'volunteer_001',
-        skills: ['first aid', 'medicine delivery', 'companion care', 'emergency response', 'grocery shopping', 'household help', 'medical escort', 'mobility assistance', 'tech support'],
-        trust_score: 0.85,
-        availability_status: 1,
-        location: { latitude: 13.0827, longitude: 80.2707 }
-    };
 
     useEffect(() => {
         // Get the location from sessionStorage if it exists

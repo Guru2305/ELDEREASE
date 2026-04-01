@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MapPin, Navigation, Phone, CheckCircle, Clock, AlertTriangle, TrendingUp, Users, DollarSign, Star, Award } from 'lucide-react';
-import MockMap from '../../components/shared/MockMap';
+import { MapPin, Navigation, Phone, CheckCircle, AlertTriangle, Star, Award } from 'lucide-react';
 import DutyProtection from './components/DutyProtection';
 import NotificationPopup from './components/NotificationPopup';
 import RequestService from '../../services/RequestService';
@@ -9,12 +8,9 @@ import type { ServiceRequest } from '../../services/RequestService';
 import { 
     processAndRankRequests, 
     VolunteerProfile, 
-    PriorityRequest, 
-    getTrustLevel,
-    calculateTrustScore,
-    EmergencyFeatures,
+    PriorityRequest,
     getCurrentLocation,
-    watchLocation 
+    watchLocation
 } from './algorithms/PriorityScoring';
 import { getEmergencyChecklist, ChecklistItem } from './algorithms/EmergencyChecklist';
 import { openSmartNavigation, NavigationLocation } from './algorithms/SmartNavigation';
@@ -28,7 +24,6 @@ export default function VolunteerDashboard() {
     const [processedRequests, setProcessedRequests] = useState<PriorityRequest[]>([]);
     const [showChecklist, setShowChecklist] = useState(false);
     const [currentChecklist, setCurrentChecklist] = useState<ChecklistItem[]>([]);
-    const [liveRequests, setLiveRequests] = useState<ServiceRequest[]>([]);
     const [volunteerLocation, setVolunteerLocation] = useState({ latitude: 13.0827, longitude: 80.2707 });
     const [locationError, setLocationError] = useState<string | null>(null);
     const [isTrackingLocation, setIsTrackingLocation] = useState(false);
@@ -50,7 +45,6 @@ export default function VolunteerDashboard() {
         // Subscribe to new requests
         const unsubscribe = RequestService.subscribe((requests: ServiceRequest[]) => {
             const pendingRequests = requests.filter(req => req.status === 'pending');
-            setLiveRequests(pendingRequests);
             
             // Process and rank the new requests based on proximity and urgency
             try {
@@ -88,9 +82,9 @@ export default function VolunteerDashboard() {
     }, [volunteerProfile]);
 
     const stats = [
-        { label: 'Tasks Completed', value: '24', icon: 'CheckCircle', color: 'text-green-600' },
-        { label: 'People Helped', value: '18', icon: 'Users', color: 'text-blue-600' },
-        { label: 'Total Earnings', value: '₹1,250', icon: 'DollarSign', color: 'text-emerald-600' },
+        { label: 'Tasks Completed', value: '24', icon: CheckCircle, color: 'text-green-600' },
+        { label: 'People Helped', value: '18', icon: Star, color: 'text-blue-600' },
+        { label: 'Total Earnings', value: '₹1,250', icon: Award, color: 'text-emerald-600' },
         { label: 'Success Rate', value: '98%', icon: 'TrendingUp', color: 'text-purple-600' }
     ];
 
@@ -191,10 +185,10 @@ export default function VolunteerDashboard() {
                     const randomTask = processedRequests[Math.floor(Math.random() * processedRequests.length)];
                     setCurrentNotification({
                         elderName: randomTask.elderName || 'Unknown',
-                        taskType: randomTask.title || 'Service Request',
+                        taskType: randomTask.taskType || 'Service Request',
                         taskId: randomTask.id,
                         location: randomTask.location || 'Unknown Location',
-                        urgent: randomTask.urgent || false,
+                        urgent: randomTask.emergency_severity === 'HIGH',
                         message: randomTask.message || 'No additional message provided',
                         emergency_severity: randomTask.emergency_severity || 'LOW'
                     });
@@ -269,7 +263,7 @@ export default function VolunteerDashboard() {
                                 <p className="text-sm text-slate-500 mb-1">{stat.label}</p>
                                 <p className="text-2xl font-bold text-slate-800">{stat.value}</p>
                             </div>
-                            <stat.icon className={`w-8 h-8 ${stat.color}`} />
+                            {React.createElement(stat.icon, { className: `w-8 h-8 ${stat.color}` })}
                         </div>
                     </div>
                 ))}
@@ -340,7 +334,7 @@ export default function VolunteerDashboard() {
                                     <div className="flex justify-between items-start mb-2">
                                         <h4 className="font-bold text-slate-800 flex items-center gap-2">
                                             {task.emergency_severity === 'HIGH' && <AlertTriangle className="w-5 h-5 text-red-500 animate-pulse" />}
-                                            {task.title}
+                                            {task.taskType}
                                         </h4>
                                     </div>
 
@@ -433,7 +427,7 @@ export default function VolunteerDashboard() {
                                                 <span className={`flex-1 text-sm ${
                                                     item.completed ? 'text-slate-500 line-through' : 'text-slate-700'
                                                 }`}>
-                                                    {item.task}
+                                                    {item.item}
                                                 </span>
                                                 <span className={`text-xs px-2 py-1 rounded ${
                                                     item.priority === 'critical' ? 'bg-red-100 text-red-700' :

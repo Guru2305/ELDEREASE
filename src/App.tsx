@@ -1,8 +1,9 @@
-import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import RoleSelection from './pages/RoleSelection';
+import Login from './components/Auth/Login';
 
 import ElderHome from './pages/elder/ElderHome';
+import ElderDashboard from './pages/elder/ElderDashboard';
 import ProfilePage from './pages/elder/ProfilePage';
 import Bookings from './pages/elder/Bookings';
 import CallSupportPage from './pages/elder/CallSupportPage';
@@ -18,14 +19,8 @@ import Safety from './pages/elder/Safety';
 import TransportPage from './pages/elder/TransportPage';
 import FamilySupport from './pages/elder/familysupport';
 
-import AdminLayout from './pages/admin/admin/components/AdminLayout';
-import AdminDashboard from './pages/admin/admin/AdminDashboard';
-import AdminHelpCenter from './pages/admin/admin/AdminHelpCenter';
-import JobAssignment from './pages/admin/admin/JobAssignment';
-import VolunteerManagement from './pages/admin/admin/VolunteerManagement';
-
-import VolunteerLayout from './pages/volunteer/components/VolunteerLayout';
 import VolunteerDashboard from './pages/volunteer/VolunteerDashboard';
+import VolunteerLayout from './pages/volunteer/components/VolunteerLayout';
 import VolunteerMap from './pages/volunteer/VolunteerMap';
 import VolunteerRequests from './pages/volunteer/VolunteerRequests';
 import VolunteerHistory from './pages/volunteer/VolunteerHistory';
@@ -35,11 +30,24 @@ import VolunteerProfile from './pages/volunteer/VolunteerProfile';
 import VolunteerSupport from './pages/volunteer/VolunteerSupport';
 import { DutyProvider } from './pages/volunteer/context/DutyContext';
 
+import AdminLayout from './pages/admin/admin/components/AdminLayout';
+import AdminDashboard from './pages/admin/admin/AdminDashboard';
+import AdminHelpCenter from './pages/admin/admin/AdminHelpCenter';
+import JobAssignment from './pages/admin/admin/JobAssignment';
+import VolunteerManagement from './pages/admin/admin/VolunteerManagement';
+
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<RoleSelection />} />
+        <Route path="/login" element={<Login />} />
+        
+        {/* New Dashboard Routes */}
+        <Route path="/elder-dashboard" element={<ElderDashboard />} />
+        <Route path="/volunteer-dashboard" element={<VolunteerDashboard />} />
+        
+        {/* Legacy Routes - Keep for compatibility */}
         <Route path="/elder" element={<ElderHome />} />
         <Route path="/elder/profile" element={<ProfilePage />} />
         <Route path="/elder/bookings" element={<Bookings />} />

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Clock, AlertTriangle, MapPin, Navigation } from 'lucide-react';
+import { Clock, MapPin, Navigation } from 'lucide-react';
 import DutyProtection from './components/DutyProtection';
 import { 
     processAndRankRequests, 
@@ -18,16 +18,15 @@ export default function VolunteerRequests() {
     const [showChecklist, setShowChecklist] = useState(false);
     const [currentChecklist, setCurrentChecklist] = useState<ChecklistItem[]>([]);
     const [activeTask, setActiveTask] = useState<PriorityRequest | null>(null);
-    const [liveRequests, setLiveRequests] = useState<ServiceRequest[]>([]);
 
     // Dynamic volunteer profile with real-time location
-    const [volunteerProfile, setVolunteerProfile] = useState<VolunteerProfile>({
+    const volunteerProfile: VolunteerProfile = {
         volunteer_id: 'volunteer_001',
         skills: ['first aid', 'medicine delivery', 'companion care', 'emergency response', 'grocery shopping', 'household help', 'medical escort', 'mobility assistance', 'tech support'],
         trust_score: 0.85, // High trust score
         availability_status: 1, // Available
         location: { latitude: 13.0827, longitude: 80.2707 }
-    });
+    };
 
     // Load stored requests and listen for new ones
     useEffect(() => {
@@ -37,7 +36,6 @@ export default function VolunteerRequests() {
         // Subscribe to new requests
         const unsubscribe = RequestService.subscribe((requests: ServiceRequest[]) => {
             const pendingRequests = requests.filter(req => req.status === 'pending');
-            setLiveRequests(pendingRequests);
             
             // Process and rank new requests based on proximity and urgency
             try {
@@ -103,9 +101,9 @@ export default function VolunteerRequests() {
         try {
             // Open smart navigation
             const navigationLocation: NavigationLocation = {
-                start: volunteerProfile.location,
-                end: task.coordinates || volunteerProfile.location,
-                waypoints: []
+                latitude: task.coordinates?.latitude || volunteerProfile.location.latitude,
+                longitude: task.coordinates?.longitude || volunteerProfile.location.longitude,
+                address: task.location || 'Unknown Location'
             };
             
             openSmartNavigation(navigationLocation);
