@@ -29,35 +29,43 @@ app.use(cors({
 
 // Handle preflight requests
 app.options('*', (req, res) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  res.header('Access-Control-Allow-Credentials', 'true');
-  res.sendStatus(200);
-});
 app.use(express.json());
+
+// Handle preflight requests
+app.options('*', cors());
 
 // Routes
 app.use('/api/auth', authRoutes);
-app.use('/api/elders', elderRoutes);
-app.use('/api/volunteers', volunteerRoutes);
-app.use('/api/bookings', bookingRoutes);
+app.use('/api/tasks', taskRoutes);
 
-// Health check
+// Health check endpoint
 app.get('/api/health', (req, res) => {
-  res.json({ 
-    status: 'OK', 
+  res.json({
+    status: 'OK',
     message: 'ELDEREASE Backend is running',
     timestamp: new Date().toISOString()
   });
 });
 
+// Root endpoint
+app.get('/', (req, res) => {
+  res.json({
+    message: 'ELDEREASE Backend API',
+    version: '2.0.0',
+    endpoints: {
+      auth: '/api/auth',
+      tasks: '/api/tasks',
+      health: '/api/health'
+    }
+  });
+});
+
 // Error handling middleware
 app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ 
-    success: false, 
-    message: 'Something went wrong!',
+  console.error('Unhandled error:', err);
+  res.status(500).json({
+    success: false,
+    message: 'Internal server error',
     error: process.env.NODE_ENV === 'development' ? err.message : undefined
   });
 });
@@ -66,33 +74,30 @@ app.use((err, req, res, next) => {
 app.use('*', (req, res) => {
   res.status(404).json({
     success: false,
-    message: 'Route not found'
+    message: 'Route not found',
+    path: req.originalUrl
   });
 });
-
-// Database connection
-const connectDB = async () => {
-  try {
-    const conn = await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/elderease');
-    console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
-  } catch (error) {
-    console.error('❌ MongoDB Connection Error:', error);
-    // Don't exit, continue with in-memory storage
-    console.log('⚠️ Continuing with in-memory storage');
-    return true;
-  }
-};
 
 // Start server
 const PORT = process.env.PORT || 5000;
 
 const startServer = async () => {
-  await connectDB();
-  app.listen(PORT, () => {
-    console.log(`🚀 Server running on port ${PORT}`);
-    console.log(`📱 Elder UI: ${process.env.FRONTEND_URL || 'http://localhost:3000'}`);
-    console.log(`👥 Volunteer UI: ${process.env.FRONTEND_URL_VOLUNTEER || 'http://localhost:3001'}`);
-  });
+  try {
+    // Test database connection
+    await connectToDatabase();
+    console.log('Database connection established');
+    
+    app.listen(PORT, () => {
+      console.log(`\n\ud83d\ude80 ELDEREASE Backend running on port ${PORT}`);
+      console.log(`\ud83d\udccd Health: http://localhost:${PORT}/api/health`);
+      console.log(`\ud83d\udc65 Frontend: ${process.env.FRONTEND_URL || 'http://localhost:5175'}`);
+      console.log(`\ud83d\udcda Database: MongoDB Atlas`);
+    });
+  } catch (error) {
+    console.error('Failed to start server:', error);
+    process.exit(1);
+  }
 };
 
 startServer();
