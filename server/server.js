@@ -24,7 +24,8 @@ app.use(cors({
   origin: [
     process.env.FRONTEND_URL || 'http://localhost:3000',
     process.env.FRONTEND_URL_VOLUNTEER || 'http://localhost:3001',
-    'http://localhost:5175' // Add the current frontend port
+    'http://localhost:5175', // Local development
+    'https://elderease-*.vercel.app' // Vercel deployments
   ],
   credentials: true
 }));

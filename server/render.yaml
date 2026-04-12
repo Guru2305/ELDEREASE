@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: elderease-backend
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: JWT_SECRET
+        value: your-super-secret-jwt-key-change-this-in-production-min-32-chars
+      - key: JWT_EXPIRE
+        value: 7d
+      - key: MONGODB_URI
+        value: mongodb+srv://elderease_user:YOUR_PASSWORD_HERE@elderease-cluster.xxxxx.mongodb.net/elderease?retryWrites=true&w=majority
