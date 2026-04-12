@@ -27,6 +27,8 @@ export default function VolunteerDashboard() {
     const [volunteerLocation, setVolunteerLocation] = useState({ latitude: 13.0827, longitude: 80.2707 });
     const [locationError, setLocationError] = useState<string | null>(null);
     const [isTrackingLocation, setIsTrackingLocation] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
     // Dynamic volunteer profile with real-time location
     const [volunteerProfile, setVolunteerProfile] = useState<VolunteerProfile>({
@@ -46,7 +48,7 @@ export default function VolunteerDashboard() {
         const unsubscribe = RequestService.subscribe((requests: ServiceRequest[]) => {
             const pendingRequests = requests.filter(req => req.status === 'pending');
             
-            // Process and rank the new requests based on proximity and urgency
+            // Process and rank new requests based on proximity and urgency
             try {
                 const processed = processAndRankRequests(
                     pendingRequests.map(req => ({
@@ -73,8 +75,12 @@ export default function VolunteerDashboard() {
                     5 // 5km radius for proximity-based requests
                 );
                 setProcessedRequests(processed);
+                setLoading(false);
+                setError(null);
             } catch (error) {
                 console.error('Error processing requests:', error);
+                setError('Failed to load requests');
+                setLoading(false);
             }
         });
         
@@ -212,17 +218,69 @@ export default function VolunteerDashboard() {
     }, [processedRequests]);
 
     const closeNotification = () => {
-        setShowNotification(false);
-        setCurrentNotification(null);
     };
 
-    return (
-        <DutyProtection>
+    // Show first notification after 2 seconds
+    const initialTimer = setTimeout(showRandomNotification, 2000);
+    
+    // Then show notifications every 10 seconds
+    const interval = setInterval(showRandomNotification, 10000);
+
+    return () => {
+        clearTimeout(initialTimer);
+        clearInterval(interval);
+    };
+}, [processedRequests]);
+
+const closeNotification = () => {
+    setShowNotification(false);
+    setCurrentNotification(null);
+};
+
+return (
+    <DutyProvider>
+        {loading ? (
+            <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+                <div className="text-center">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 border-t-transparent"></div>
+                    <p className="mt-4 text-slate-600">Loading volunteer dashboard...</p>
+                </div>
+            </div>
+        ) : error ? (
+            <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+                <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-8 max-w-md w-full mx-4">
+                    <div className="text-center">
+                        <AlertTriangle className="w-16 h-16 text-red-600 mx-auto mb-4" />
+                        <h2 className="text-xl font-bold text-slate-800 mb-2">Dashboard Error</h2>
+                        <p className="text-slate-600">{error}</p>
+                        <button 
+                            onClick={() => window.location.reload()} 
+                            className="mt-4 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+                        >
+                            Reload Page
+                        </button>
+                    </div>
+                </div>
+            </div>
+        ) : (
             <div className="space-y-6">
-            {/* Volunteer Profile Info */}
-            <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
-                <div className="flex items-center justify-between mb-4">
-                    <div>
+                {/* Volunteer Profile Info */}
+                <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+                    <div className="flex items-center justify-between mb-4">
+                        <div>
+                            <h2 className="text-lg font-semibold text-slate-800">Volunteer Profile</h2>
+                            <p className="text-sm text-slate-500">Skills: {volunteerProfile.skills.join(', ')}</p>
+                            <div className="flex items-center gap-2 mt-1">
+                                <div className={`w-2 h-2 rounded-full ${
+                                    isTrackingLocation ? 'bg-green-500 animate-pulse' : 'bg-slate-300'
+                                }`} />
+                                <span className="text-xs text-slate-500">
+                                    {isTrackingLocation ? 'Live Tracking' : 'Location Unknown'}
+                                </span>
+                                {locationError && (
+                                    <span className="text-xs text-amber-600">{locationError}</span>
+                                )}
+                            </div>
                         <h2 className="text-lg font-semibold text-slate-800">Volunteer Profile</h2>
                         <p className="text-sm text-slate-500">Skills: {volunteerProfile.skills.join(', ')}</p>
                         <div className="flex items-center gap-2 mt-1">
