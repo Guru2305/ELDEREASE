@@ -1,5 +1,5 @@
 // API Configuration
-const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://elderease-backend-a8v3.onrender.com/api';
 
 // Generic API helper
 class ApiService {
