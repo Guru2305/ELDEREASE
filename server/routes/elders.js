@@ -25,9 +25,9 @@ router.get('/profile', async (req, res) => {
           phone: elder.phone,
           age: elder.age,
           address: elder.address,
-          emergencyContacts: elder.emergencyContacts,
-          medicalConditions: elder.medicalConditions,
-          preferences: elder.preferences,
+          emergencyContacts: elder.emergencyContacts || [],
+          medicalConditions: elder.medicalConditions || [],
+          preferences: elder.preferences || {},
           isActive: elder.isActive,
           createdAt: elder.createdAt
         }
@@ -103,16 +103,16 @@ router.get('/bookings', async (req, res) => {
   try {
     const { status, page = 1, limit = 10 } = req.query;
     
-    // Mock bookings data for testing
+    // Mock bookings data for testing (using real elder ID)
     const mockBookings = [
       {
         _id: '1',
         elderId: req.user._id,
         volunteerId: {
           _id: 'v1',
-          firstName: 'John',
-          lastName: 'Doe',
-          phone: '9876543210',
+          firstName: req.user.firstName, // Use real elder's first name
+          lastName: req.user.lastName,   // Use real elder's last name
+          phone: req.user.phone,
           ratings: { average: 4.5 },
           skills: ['companion', 'medical']
         },
