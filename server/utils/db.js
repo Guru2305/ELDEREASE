@@ -1,4 +1,4 @@
-import { MongoClient, ObjectId } from 'mongodb';
+import { MongoClient } from 'mongodb';
 
 // Singleton pattern for database connection
 let cachedClient = null;
@@ -6,6 +6,13 @@ let cachedDb = null;
 let cachedDbName = null;
 
 export async function connectToDatabase() {
+  // Check if MONGODB_URI is defined
+  if (!process.env.MONGODB_URI) {
+    console.error('ERROR: MONGODB_URI environment variable is not defined');
+    console.error('Please add MONGODB_URI to your Render environment variables');
+    process.exit(1);
+  }
+
   // If we have a connection, return it
   if (cachedClient && cachedDb && cachedDbName) {
     return { client: cachedClient, db: cachedDb, dbName: cachedDbName };
@@ -13,9 +20,6 @@ export async function connectToDatabase() {
 
   // Create new connection
   const uri = process.env.MONGODB_URI;
-  if (!uri) {
-    throw new Error('Please define the MONGODB_URI environment variable');
-  }
 
   const client = new MongoClient(uri, {
     maxPoolSize: 10, // Maximum number of connections in the pool
@@ -24,6 +28,7 @@ export async function connectToDatabase() {
   });
 
   try {
+    console.log('Connecting to MongoDB Atlas...');
     await client.connect();
     
     // Extract database name from URI or use default
@@ -39,15 +44,18 @@ export async function connectToDatabase() {
     return { client, db, dbName };
   } catch (error) {
     console.error('Failed to connect to MongoDB:', error);
-    throw error;
+    console.error('Please check your MONGODB_URI and network connectivity');
+    process.exit(1);
   }
 }
 
 // Helper function to convert string to ObjectId
 export function toObjectId(id) {
   try {
+    const { ObjectId } = require('mongodb');
     return new ObjectId(id);
   } catch (error) {
+    console.error(`Invalid ObjectId: ${id}`);
     throw new Error(`Invalid ObjectId: ${id}`);
   }
 }
