@@ -218,24 +218,9 @@ export default function VolunteerDashboard() {
     }, [processedRequests]);
 
     const closeNotification = () => {
+        setShowNotification(false);
+        setCurrentNotification(null);
     };
-
-    // Show first notification after 2 seconds
-    const initialTimer = setTimeout(showRandomNotification, 2000);
-    
-    // Then show notifications every 10 seconds
-    const interval = setInterval(showRandomNotification, 10000);
-
-    return () => {
-        clearTimeout(initialTimer);
-        clearInterval(interval);
-    };
-}, [processedRequests]);
-
-const closeNotification = () => {
-    setShowNotification(false);
-    setCurrentNotification(null);
-};
 
 return (
     <DutyProvider>
@@ -543,6 +528,7 @@ return (
         message={currentNotification?.message}
         emergency_severity={currentNotification?.emergency_severity}
     />
+        )}
     </DutyProtection>
 );
 }
