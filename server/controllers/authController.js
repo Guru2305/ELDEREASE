@@ -1,14 +1,9 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { validationResult } from 'express-validator';
+import { findUserByEmail, addUser } from '../utils/sharedStorage.js';
 // import Elder from '../models/Elder.js';
 // import Volunteer from '../models/Volunteer.js';
-
-// In-memory storage for testing (fallback when MongoDB unavailable)
-let users = {
-  elders: [],
-  volunteers: []
-};
 
 // MongoDB models (when connected)
 let Elder, Volunteer;
@@ -18,7 +13,7 @@ try {
   Elder = require('../models/Elder.js').default;
   Volunteer = require('../models/Volunteer.js').default;
 } catch (error) {
-  console.log('⚠️ MongoDB models not loaded, using in-memory storage');
+  console.log('Using in-memory storage for authentication');
 }
 
 // Generate JWT Token
@@ -53,11 +48,8 @@ export const register = async (req, res) => {
         existingUser = await Volunteer.findOne({ email });
       }
     } else {
-      // Fallback to in-memory
-      existingUser = users.elders.find(user => user.email === email);
-      if (!existingUser) {
-        existingUser = users.volunteers.find(user => user.email === email);
-      }
+      // Fallback to shared in-memory storage
+      existingUser = findUserByEmail(email);
     }
 
     // Hash password
@@ -93,8 +85,8 @@ export const register = async (req, res) => {
         
         await user.save();
       } else {
-        // Fallback to in-memory
-        user = {
+        // Fallback to shared in-memory storage
+        user = addUser(role, {
           _id: userId,
           firstName,
           lastName,
@@ -107,9 +99,7 @@ export const register = async (req, res) => {
           role: 'elder',
           isActive: true,
           createdAt: new Date()
-        };
-        
-        users.elders.push(user);
+        });
       }
     } else if (role === 'volunteer') {
       // Validate volunteer-specific fields
@@ -137,8 +127,8 @@ export const register = async (req, res) => {
         
         await user.save();
       } else {
-        // Fallback to in-memory
-        user = {
+        // Fallback to shared in-memory storage
+        user = addUser(role, {
           _id: userId,
           firstName,
           lastName,
@@ -152,9 +142,7 @@ export const register = async (req, res) => {
           isActive: true,
           ratings: { average: 0, totalRatings: 0, reviews: [] },
           createdAt: new Date()
-        };
-        
-        users.volunteers.push(user);
+        });
       }
     } else {
       return res.status(400).json({

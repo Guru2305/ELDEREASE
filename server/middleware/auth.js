@@ -1,12 +1,18 @@
 import jwt from 'jsonwebtoken';
+import { findUserById } from '../utils/sharedStorage.js';
 // import Elder from '../models/Elder.js';
 // import Volunteer from '../models/Volunteer.js';
 
-// In-memory storage (same as in authController)
-let users = {
-  elders: [],
-  volunteers: []
-};
+// MongoDB models (when connected)
+let Elder, Volunteer;
+
+// Try to load MongoDB models, fallback to in-memory
+try {
+  Elder = require('../models/Elder.js').default;
+  Volunteer = require('../models/Volunteer.js').default;
+} catch (error) {
+  console.log('Using in-memory storage for authentication');
+}
 
 export const authenticate = async (req, res, next) => {
   try {
@@ -30,11 +36,8 @@ export const authenticate = async (req, res, next) => {
         user = await Volunteer.findById(decoded.id).select('-password');
       }
     } else {
-      // Fallback to in-memory
-      user = users.elders.find(u => u._id === decoded.id);
-      if (!user) {
-        user = users.volunteers.find(u => u._id === decoded.id);
-      }
+      // Fallback to shared in-memory storage
+      user = findUserById(decoded.id);
     }
 
     if (!user) {
