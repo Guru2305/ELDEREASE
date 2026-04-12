@@ -73,10 +73,8 @@ app.use('*', (req, res) => {
 // Database connection
 const connectDB = async () => {
   try {
-    // For now, we'll skip MongoDB connection and use in-memory storage
-    console.log(`⚠️ MongoDB connection skipped - using in-memory storage for testing`);
-    console.log(`📝 To enable database storage, set up MongoDB Atlas and update .env file`);
-    return true;
+    const conn = await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/elderease');
+    console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
   } catch (error) {
     console.error('❌ MongoDB Connection Error:', error);
     // Don't exit, continue with in-memory storage

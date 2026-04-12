@@ -4,11 +4,22 @@ import { validationResult } from 'express-validator';
 // import Elder from '../models/Elder.js';
 // import Volunteer from '../models/Volunteer.js';
 
-// In-memory storage for testing
+// In-memory storage for testing (fallback when MongoDB unavailable)
 let users = {
   elders: [],
   volunteers: []
 };
+
+// MongoDB models (when connected)
+let Elder, Volunteer;
+
+// Try to load MongoDB models, fallback to in-memory
+try {
+  Elder = require('../models/Elder.js').default;
+  Volunteer = require('../models/Volunteer.js').default;
+} catch (error) {
+  console.log('⚠️ MongoDB models not loaded, using in-memory storage');
+}
 
 // Generate JWT Token
 const generateToken = (id, role) => {
@@ -34,20 +45,19 @@ export const register = async (req, res) => {
     const { role, firstName, lastName, email, password, phone, ...otherFields } = req.body;
 
     // Check if user already exists
-    let existingUser = users.elders.find(user => user.email === email);
-    if (existingUser) {
-      return res.status(400).json({
-        success: false,
-        message: 'User already exists as an elder'
-      });
-    }
-
-    existingUser = users.volunteers.find(user => user.email === email);
-    if (existingUser) {
-      return res.status(400).json({
-        success: false,
-        message: 'User already exists as a volunteer'
-      });
+    let existingUser;
+    if (Elder && Volunteer) {
+      // Use MongoDB when available
+      existingUser = await Elder.findOne({ email });
+      if (!existingUser) {
+        existingUser = await Volunteer.findOne({ email });
+      }
+    } else {
+      // Fallback to in-memory
+      existingUser = users.elders.find(user => user.email === email);
+      if (!existingUser) {
+        existingUser = users.volunteers.find(user => user.email === email);
+      }
     }
 
     // Hash password
@@ -55,7 +65,7 @@ export const register = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, salt);
 
     let user;
-    const userId = Date.now().toString(); // Simple ID generation
+    const userId = Date.now().toString();
     
     if (role === 'elder') {
       // Validate elder-specific fields
@@ -67,22 +77,40 @@ export const register = async (req, res) => {
         });
       }
 
-      user = {
-        _id: userId,
-        firstName,
-        lastName,
-        email,
-        password: hashedPassword,
-        phone,
-        age,
-        address,
-        emergencyContacts: emergencyContacts || [],
-        role: 'elder',
-        isActive: true,
-        createdAt: new Date()
-      };
-      
-      users.elders.push(user);
+      if (Elder && Volunteer) {
+        // Use MongoDB
+        user = new Elder({
+          firstName,
+          lastName,
+          email,
+          password: hashedPassword,
+          phone,
+          age,
+          address,
+          emergencyContacts: emergencyContacts || [],
+          ...otherFields
+        });
+        
+        await user.save();
+      } else {
+        // Fallback to in-memory
+        user = {
+          _id: userId,
+          firstName,
+          lastName,
+          email,
+          password: hashedPassword,
+          phone,
+          age,
+          address,
+          emergencyContacts: emergencyContacts || [],
+          role: 'elder',
+          isActive: true,
+          createdAt: new Date()
+        };
+        
+        users.elders.push(user);
+      }
     } else if (role === 'volunteer') {
       // Validate volunteer-specific fields
       const { age, address, skills } = otherFields;
@@ -93,23 +121,41 @@ export const register = async (req, res) => {
         });
       }
 
-      user = {
-        _id: userId,
-        firstName,
-        lastName,
-        email,
-        password: hashedPassword,
-        phone,
-        age,
-        address,
-        skills,
-        role: 'volunteer',
-        isActive: true,
-        ratings: { average: 0, totalRatings: 0, reviews: [] },
-        createdAt: new Date()
-      };
-      
-      users.volunteers.push(user);
+      if (Elder && Volunteer) {
+        // Use MongoDB
+        user = new Volunteer({
+          firstName,
+          lastName,
+          email,
+          password: hashedPassword,
+          phone,
+          age,
+          address,
+          skills,
+          ...otherFields
+        });
+        
+        await user.save();
+      } else {
+        // Fallback to in-memory
+        user = {
+          _id: userId,
+          firstName,
+          lastName,
+          email,
+          password: hashedPassword,
+          phone,
+          age,
+          address,
+          skills,
+          role: 'volunteer',
+          isActive: true,
+          ratings: { average: 0, totalRatings: 0, reviews: [] },
+          createdAt: new Date()
+        };
+        
+        users.volunteers.push(user);
+      }
     } else {
       return res.status(400).json({
         success: false,

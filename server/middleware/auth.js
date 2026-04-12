@@ -21,10 +21,20 @@ export const authenticate = async (req, res, next) => {
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback-secret');
     
-    // Try to find user in both collections (in-memory)
-    let user = users.elders.find(u => u._id === decoded.id);
-    if (!user) {
-      user = users.volunteers.find(u => u._id === decoded.id);
+    // Try to find user in both collections (MongoDB when available)
+    let user;
+    if (typeof Elder !== 'undefined' && typeof Volunteer !== 'undefined') {
+      // Use MongoDB when available
+      user = await Elder.findById(decoded.id).select('-password');
+      if (!user) {
+        user = await Volunteer.findById(decoded.id).select('-password');
+      }
+    } else {
+      // Fallback to in-memory
+      user = users.elders.find(u => u._id === decoded.id);
+      if (!user) {
+        user = users.volunteers.find(u => u._id === decoded.id);
+      }
     }
 
     if (!user) {
