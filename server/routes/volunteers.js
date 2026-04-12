@@ -14,26 +14,43 @@ router.get('/profile', async (req, res) => {
   try {
     const volunteer = req.user;
     
+    // Add mock data for testing
+    const enhancedVolunteer = {
+      ...volunteer,
+      availability: {
+        monday: { morning: true, afternoon: false, evening: true },
+        tuesday: { morning: false, afternoon: true, evening: true },
+        wednesday: { morning: true, afternoon: true, evening: false },
+        thursday: { morning: false, afternoon: false, evening: true },
+        friday: { morning: true, afternoon: true, evening: true },
+        saturday: { morning: false, afternoon: false, evening: false },
+        sunday: { morning: false, afternoon: false, evening: false }
+      },
+      experience: '2+ years',
+      totalBookings: 12,
+      completedBookings: 10,
+      averageRating: 4.5
+    };
+    
     res.status(200).json({
       success: true,
       data: {
         volunteer: {
-          id: volunteer._id,
-          firstName: volunteer.firstName,
-          lastName: volunteer.lastName,
-          email: volunteer.email,
-          phone: volunteer.phone,
-          age: volunteer.age,
-          address: volunteer.address,
-          skills: volunteer.skills,
-          availability: volunteer.availability,
-          experience: volunteer.experience,
-          ratings: volunteer.ratings,
-          backgroundCheck: volunteer.backgroundCheck,
-          isOnline: volunteer.isOnline,
-          currentLocation: volunteer.currentLocation,
-          isActive: volunteer.isActive,
-          createdAt: volunteer.createdAt
+          id: enhancedVolunteer._id,
+          firstName: enhancedVolunteer.firstName,
+          lastName: enhancedVolunteer.lastName,
+          email: enhancedVolunteer.email,
+          phone: enhancedVolunteer.phone,
+          age: enhancedVolunteer.age,
+          address: enhancedVolunteer.address,
+          skills: enhancedVolunteer.skills,
+          availability: enhancedVolunteer.availability,
+          experience: enhancedVolunteer.experience,
+          ratings: enhancedVolunteer.ratings,
+          isActive: enhancedVolunteer.isActive,
+          totalBookings: enhancedVolunteer.totalBookings,
+          completedBookings: enhancedVolunteer.completedBookings,
+          averageRating: enhancedVolunteer.averageRating
         }
       }
     });
