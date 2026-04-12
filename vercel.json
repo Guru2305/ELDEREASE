@@ -1,38 +1,4 @@
 {
   "version": 2,
-  "name": "elderease",
-  "builds": [
-    {
-      "src": "package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "dist"
-      }
-    },
-    {
-      "src": "server/package.json",
-      "use": "@vercel/node"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "/server/server.js",
-      "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/dist/$1"
-    }
-  ],
-  "env": {
-    "MONGODB_URI": "@mongodb_uri",
-    "JWT_SECRET": "@jwt_secret",
-    "NODE_ENV": "production"
-  },
-  "functions": {
-    "server/server.js": {
-      "maxDuration": 10
-    }
-  }
+  "framework": "vite"
 }

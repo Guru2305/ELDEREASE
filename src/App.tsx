@@ -1,9 +1,9 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import RoleSelection from './pages/RoleSelection';
-import Login from './components/Auth/Login';
+import SimpleLogin from './components/Auth/SimpleLogin';
 
 import ElderHome from './pages/elder/ElderHome';
-import ElderDashboard from './pages/elder/ElderDashboard';
+import ElderDashboard from './pages/elder/ElderDashboard.tsx';
 import ProfilePage from './pages/elder/ProfilePage';
 import Bookings from './pages/elder/Bookings';
 import CallSupportPage from './pages/elder/CallSupportPage';
@@ -40,8 +40,8 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<RoleSelection />} />
-        <Route path="/login" element={<Login />} />
+        <Route path="/" element={<SimpleLogin />} />
+        <Route path="/login" element={<SimpleLogin />} />
         
         {/* New Dashboard Routes */}
         <Route path="/elder-dashboard" element={<ElderDashboard />} />

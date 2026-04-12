@@ -1,8 +1,14 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { validationResult } from 'express-validator';
-import Elder from '../models/Elder.js';
-import Volunteer from '../models/Volunteer.js';
+// import Elder from '../models/Elder.js';
+// import Volunteer from '../models/Volunteer.js';
+
+// In-memory storage for testing
+let users = {
+  elders: [],
+  volunteers: []
+};
 
 // Generate JWT Token
 const generateToken = (id, role) => {
@@ -28,7 +34,7 @@ export const register = async (req, res) => {
     const { role, firstName, lastName, email, password, phone, ...otherFields } = req.body;
 
     // Check if user already exists
-    let existingUser = await Elder.findOne({ email });
+    let existingUser = users.elders.find(user => user.email === email);
     if (existingUser) {
       return res.status(400).json({
         success: false,
@@ -36,7 +42,7 @@ export const register = async (req, res) => {
       });
     }
 
-    existingUser = await Volunteer.findOne({ email });
+    existingUser = users.volunteers.find(user => user.email === email);
     if (existingUser) {
       return res.status(400).json({
         success: false,
@@ -49,17 +55,20 @@ export const register = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, salt);
 
     let user;
+    const userId = Date.now().toString(); // Simple ID generation
+    
     if (role === 'elder') {
       // Validate elder-specific fields
       const { age, address, emergencyContacts } = otherFields;
-      if (!age || !address || !emergencyContacts) {
+      if (!age || !address) {
         return res.status(400).json({
           success: false,
-          message: 'Age, address, and emergency contacts are required for elders'
+          message: 'Age and address are required for elders'
         });
       }
 
-      user = new Elder({
+      user = {
+        _id: userId,
         firstName,
         lastName,
         email,
@@ -67,9 +76,13 @@ export const register = async (req, res) => {
         phone,
         age,
         address,
-        emergencyContacts,
-        ...otherFields
-      });
+        emergencyContacts: emergencyContacts || [],
+        role: 'elder',
+        isActive: true,
+        createdAt: new Date()
+      };
+      
+      users.elders.push(user);
     } else if (role === 'volunteer') {
       // Validate volunteer-specific fields
       const { age, address, skills } = otherFields;
@@ -80,7 +93,8 @@ export const register = async (req, res) => {
         });
       }
 
-      user = new Volunteer({
+      user = {
+        _id: userId,
         firstName,
         lastName,
         email,
@@ -89,16 +103,19 @@ export const register = async (req, res) => {
         age,
         address,
         skills,
-        ...otherFields
-      });
+        role: 'volunteer',
+        isActive: true,
+        ratings: { average: 0, totalRatings: 0, reviews: [] },
+        createdAt: new Date()
+      };
+      
+      users.volunteers.push(user);
     } else {
       return res.status(400).json({
         success: false,
         message: 'Invalid role specified'
       });
     }
-
-    await user.save();
 
     // Generate token
     const token = generateToken(user._id, role);
@@ -145,11 +162,11 @@ export const login = async (req, res) => {
     const { email, password } = req.body;
 
     // Find user in both collections
-    let user = await Elder.findOne({ email });
+    let user = users.elders.find(u => u.email === email);
     let role = 'elder';
     
     if (!user) {
-      user = await Volunteer.findOne({ email });
+      user = users.volunteers.find(u => u.email === email);
       role = 'volunteer';
     }
 

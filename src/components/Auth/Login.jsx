@@ -91,6 +91,68 @@ const Login = () => {
     setLoading(true);
     setError('');
 
+    // Form validation
+    if (!formData.email || !formData.password) {
+      setError('Email and password are required');
+      setLoading(false);
+      return;
+    }
+
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      setError('Please enter a valid email address');
+      setLoading(false);
+      return;
+    }
+
+    if (!isLogin) {
+      // Registration validation
+      if (!formData.firstName || !formData.lastName || !formData.phone || !formData.age) {
+        setError('Please fill in all required fields');
+        setLoading(false);
+        return;
+      }
+
+      // Phone validation
+      const phoneRegex = /^[0-9]{10}$/;
+      if (!phoneRegex.test(formData.phone)) {
+        setError('Please enter a valid 10-digit phone number');
+        setLoading(false);
+        return;
+      }
+
+      if (role === 'elder' && (!formData.address.street || !formData.address.city || !formData.address.state || !formData.address.pincode)) {
+        setError('Please complete your address');
+        setLoading(false);
+        return;
+      }
+
+      if (role === 'elder' && formData.emergencyContacts.some(contact => !contact.name || !contact.phone)) {
+        setError('Please complete all emergency contact information');
+        setLoading(false);
+        return;
+      }
+
+      if (role === 'volunteer' && formData.skills.length === 0) {
+        setError('Please select at least one skill');
+        setLoading(false);
+        return;
+      }
+
+      if (role === 'elder' && (parseInt(formData.age) < 60 || parseInt(formData.age) > 120)) {
+        setError('Age must be between 60 and 120 for elders');
+        setLoading(false);
+        return;
+      }
+
+      if (role === 'volunteer' && (parseInt(formData.age) < 18 || parseInt(formData.age) > 65)) {
+        setError('Age must be between 18 and 65 for volunteers');
+        setLoading(false);
+        return;
+      }
+    }
+
     try {
       if (isLogin) {
         // Login
@@ -128,7 +190,13 @@ const Login = () => {
         }
       }
     } catch (err) {
-      setError(err.message || 'Something went wrong');
+      console.error('Login/Register Error:', err);
+      console.error('Error details:', {
+        message: err.message,
+        response: err.response?.data,
+        status: err.response?.status
+      });
+      setError(err.response?.data?.message || err.message || 'Something went wrong. Please try again.');
     } finally {
       setLoading(false);
     }

@@ -8,12 +8,7 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "typecheck": "tsc --noEmit -p tsconfig.app.json",
-    "server": "cd server && npm run dev",
-    "server:install": "cd server && npm install",
-    "start": "concurrently \"npm run dev\" \"npm run server\"",
-    "setup:mongodb": "node scripts/setup-mongodb.js",
-    "test:db": "node scripts/test-connection.js"
+    "typecheck": "tsc --noEmit -p tsconfig.app.json"
   },
   "dependencies": {
     "react": "^18.3.1",
@@ -27,14 +22,13 @@
     "tailwind-merge": "^3.4.0",
     "concurrently": "^8.2.2",
     "leaflet": "^1.9.4",
-    "@types/leaflet": "^1.9.8",
-    "mapbox-gl": "^3.18.1"
+    "@types/leaflet": "^1.9.8"
   },
   "devDependencies": {
     "@types/react": "^18.3.5",
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.1",
-    "vite": "^8.0.3",
+    "vite": "^5.4.10",
     "typescript": "^5.5.3",
     "eslint": "^9.9.1",
     "@eslint/js": "^9.9.1",

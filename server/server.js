@@ -23,7 +23,8 @@ const app = express();
 app.use(cors({
   origin: [
     process.env.FRONTEND_URL || 'http://localhost:3000',
-    process.env.FRONTEND_URL_VOLUNTEER || 'http://localhost:3001'
+    process.env.FRONTEND_URL_VOLUNTEER || 'http://localhost:3001',
+    'http://localhost:5175' // Add the current frontend port
   ],
   credentials: true
 }));
@@ -65,11 +66,15 @@ app.use('*', (req, res) => {
 // Database connection
 const connectDB = async () => {
   try {
-    const conn = await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/elderease');
-    console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
+    // For now, we'll skip MongoDB connection and use in-memory storage
+    console.log(`⚠️ MongoDB connection skipped - using in-memory storage for testing`);
+    console.log(`📝 To enable database storage, set up MongoDB Atlas and update .env file`);
+    return true;
   } catch (error) {
     console.error('❌ MongoDB Connection Error:', error);
-    process.exit(1);
+    // Don't exit, continue with in-memory storage
+    console.log('⚠️ Continuing with in-memory storage');
+    return true;
   }
 };
 
