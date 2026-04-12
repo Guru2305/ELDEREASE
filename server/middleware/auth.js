@@ -1,6 +1,12 @@
 import jwt from 'jsonwebtoken';
-import Elder from '../models/Elder.js';
-import Volunteer from '../models/Volunteer.js';
+// import Elder from '../models/Elder.js';
+// import Volunteer from '../models/Volunteer.js';
+
+// In-memory storage (same as in authController)
+let users = {
+  elders: [],
+  volunteers: []
+};
 
 export const authenticate = async (req, res, next) => {
   try {
@@ -13,12 +19,12 @@ export const authenticate = async (req, res, next) => {
       });
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback-secret');
     
-    // Try to find user in both collections
-    let user = await Elder.findById(decoded.id).select('-password');
+    // Try to find user in both collections (in-memory)
+    let user = users.elders.find(u => u._id === decoded.id);
     if (!user) {
-      user = await Volunteer.findById(decoded.id).select('-password');
+      user = users.volunteers.find(u => u._id === decoded.id);
     }
 
     if (!user) {

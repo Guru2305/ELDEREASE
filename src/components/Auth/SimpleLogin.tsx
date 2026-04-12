@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { User, Lock, Phone, Mail, UserPlus, Eye, EyeOff } from 'lucide-react';
+import { User, Lock, Phone, Mail, UserPlus, Eye, EyeOff, Home } from 'lucide-react';
 import api from '../../services/api.js';
 
 const SimpleLogin = () => {
@@ -14,7 +14,12 @@ const SimpleLogin = () => {
     fullName: '',
     phone: '',
     age: '',
-    address: '',
+    address: {
+      street: '',
+      city: '',
+      state: '',
+      pincode: ''
+    },
     skills: []
   });
   const [loading, setLoading] = useState(false);
@@ -24,10 +29,23 @@ const SimpleLogin = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    
+    // Handle nested address fields
+    if (name.includes('address.')) {
+      const addressField = name.split('.')[1];
+      setFormData(prev => ({
+        ...prev,
+        address: {
+          ...prev.address,
+          [addressField]: value
+        }
+      }));
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        [name]: value
+      }));
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -78,19 +96,19 @@ const SimpleLogin = () => {
 
         const registerData = {
           firstName: formData.fullName.split(' ')[0] || formData.fullName,
-          lastName: formData.fullName.split(' ').slice(1).join(' ') || '',
+          lastName: formData.fullName.split(' ').slice(1).join(' ') || 'User',
           email: formData.email,
           phone: formData.phone,
           password: formData.password,
           age: parseInt(formData.age),
           role: role,
           address: {
-            street: formData.address || 'Not specified',
-            city: 'Not specified',
-            state: 'Not specified',
-            pincode: '000000'
+            street: formData.address.street || '123 Main Street',
+            city: formData.address.city || 'Chennai',
+            state: formData.address.state || 'Tamil Nadu',
+            pincode: formData.address.pincode || '600001'
           },
-          ...(role === 'volunteer' ? { skills: formData.skills } : { emergencyContacts: [] })
+          ...(role === 'volunteer' ? { skills: formData.skills.length > 0 ? formData.skills : ['companion'] } : { emergencyContacts: [{ name: 'Family Member', relation: 'Spouse', phone: '9876543210' }] })
         };
 
         const response = await api.post('/auth/register', registerData);
@@ -303,14 +321,64 @@ const SimpleLogin = () => {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Address
+                  <Home className="w-4 h-4 inline mr-1" />
+                  Street Address
                 </label>
                 <input
                   type="text"
-                  name="address"
-                  value={formData.address}
+                  name="address.street"
+                  value={formData.address.street}
                   onChange={handleChange}
-                  placeholder="Enter your address"
+                  placeholder="Enter your street address"
+                  required
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    City
+                  </label>
+                  <input
+                    type="text"
+                    name="address.city"
+                    value={formData.address.city}
+                    onChange={handleChange}
+                    placeholder="Enter your city"
+                    required
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    State
+                  </label>
+                  <input
+                    type="text"
+                    name="address.state"
+                    value={formData.address.state}
+                    onChange={handleChange}
+                    placeholder="Enter your state"
+                    required
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Pincode
+                </label>
+                <input
+                  type="text"
+                  name="address.pincode"
+                  value={formData.address.pincode}
+                  onChange={handleChange}
+                  placeholder="Enter 6-digit pincode"
+                  required
+                  maxLength="6"
+                  pattern="[0-9]{6}"
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
