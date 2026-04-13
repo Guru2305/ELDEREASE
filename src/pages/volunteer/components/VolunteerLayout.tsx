@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { useUser } from '../../../context/UserContext';
 import { 
     LayoutDashboard, 
     Map, 
@@ -19,8 +20,15 @@ import { useDuty } from '../context/DutyContext';
 export default function VolunteerLayout() {
     const navigate = useNavigate();
     const { isOnDuty, setIsOnDuty } = useDuty();
+    const { user, loading } = useUser();
     const [volunteerName, setVolunteerName] = useState('Reenish'); // This would come from backend/user context
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+    useEffect(() => {
+        if (!loading && (!user || user.role !== 'volunteer')) {
+            navigate('/');
+        }
+    }, [user, loading, navigate]);
 
     // Helper function to get initials from name
     const getInitials = (name: string) => {
@@ -78,6 +86,18 @@ export default function VolunteerLayout() {
             label: 'Help & Support'
         }
     ];
+
+    if (loading) {
+        return (
+            <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+            </div>
+        );
+    }
+
+    if (!user || user.role !== 'volunteer') {
+        return null; // Will redirect in useEffect
+    }
 
     return (
         <div className="min-h-screen bg-slate-50 flex">

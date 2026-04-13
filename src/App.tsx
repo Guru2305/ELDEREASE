@@ -65,9 +65,9 @@ function App() {
           <Route path="family-support" element={<FamilySupport />} />
         </Route>
 
-        {/* Legacy Routes - Keep for compatibility */}
-        <Route path="/elder-dashboard" element={<ElderDashboard />} />
-        <Route path="/elder-home" element={<ElderHome />} />
+        {/* Legacy Routes - Redirect to new routes */}
+        <Route path="/elder-dashboard" element={<Navigate to="/elder" replace />} />
+        <Route path="/elder-home" element={<Navigate to="/elder" replace />} />
         <Route path="/volunteer-dashboard" element={<Navigate to="/volunteer" replace />} />
 
         <Route path="/admin" element={<AdminLayout />}>

@@ -166,9 +166,9 @@ const Login = () => {
         
         // Redirect based on role
         if (response.data.user.role === 'elder') {
-          navigate('/elder-dashboard');
+          navigate('/elder');
         } else {
-          navigate('/volunteer-dashboard');
+          navigate('/volunteer');
         }
       } else {
         // Register
@@ -184,9 +184,9 @@ const Login = () => {
         
         // Redirect based on role
         if (role === 'elder') {
-          navigate('/elder-dashboard');
+          navigate('/elder');
         } else {
-          navigate('/volunteer-dashboard');
+          navigate('/volunteer');
         }
       }
     } catch (err) {
