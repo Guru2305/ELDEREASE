@@ -1,0 +1,32 @@
+services:
+  # Frontend Service
+  - type: web
+    name: elderease-frontend
+    runtime: static
+    buildCommand: npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: VITE_API_URL
+        value: https://elderease-backend.onrender.com/api
+      - key: VITE_NODE_ENV
+        value: production
+
+  # Backend Service
+  - type: web
+    name: elderease-backend
+    runtime: node
+    buildCommand: cd server && npm install
+    startCommand: cd server && npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: MONGODB_URI
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: FRONTEND_URL
+        value: https://elderease-hz89ur5u1-thashhs-projects.vercel.app
+      - key: FRONTEND_URL_VOLUNTEER
+        value: https://elderease-hz89ur5u1-thashhs-projects.vercel.app

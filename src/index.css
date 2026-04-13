@@ -1,0 +1,28 @@
+/* Leaflet CSS */
+@import 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Fix for Leaflet map z-index issues */
+.leaflet-container {
+    z-index: 1 !important;
+}
+
+.leaflet-pane {
+    z-index: 1 !important;
+}
+
+.leaflet-map-pane {
+    z-index: 1 !important;
+}
+
+.leaflet-control-container {
+    z-index: 2 !important;
+}
+
+.leaflet-top,
+.leaflet-bottom {
+    z-index: 2 !important;
+}
