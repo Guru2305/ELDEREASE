@@ -27,6 +27,6 @@ services:
       - key: JWT_SECRET
         sync: false
       - key: FRONTEND_URL
-        value: https://elderease-frontend.onrender.com
+        value: https://elderease-hz89ur5u1-thashhs-projects.vercel.app
       - key: FRONTEND_URL_VOLUNTEER
-        value: https://elderease-frontend.onrender.com
+        value: https://elderease-hz89ur5u1-thashhs-projects.vercel.app
