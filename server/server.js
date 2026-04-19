@@ -32,7 +32,11 @@ app.use(cors({
     process.env.FRONTEND_URL || 'http://localhost:5175',
     'https://elderease-hz89ur5u1-thashhs-projects.vercel.app',
     'https://elderease-gtmqzyjgu-thashhs-projects.vercel.app',
-    'https://elderease-3pev4wqb0-thashhs-projects.vercel.app'
+    'https://elderease-3pev4wqb0-thashhs-projects.vercel.app',
+    'https://elderease-7vw61vdhg-thashhs-projects.vercel.app',
+    'https://elderease-jycqx0cba-thashhs-projects.vercel.app',
+    'https://elderease-f1xyukox0-thashhs-projects.vercel.app',
+    'https://elderease-enqu1l51m-thashhs-projects.vercel.app'
   ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
