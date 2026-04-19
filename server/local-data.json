@@ -1,0 +1,149 @@
+{
+  "users": [
+    {
+      "id": "mo5swqpwecqewbxyel",
+      "firstName": "John",
+      "lastName": "Smith",
+      "email": "john.elder@example.com",
+      "phone": "+1234567890",
+      "password": "$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
+      "role": "elder",
+      "age": 75,
+      "created_at": "2026-04-19T13:27:53.925Z",
+      "updated_at": "2026-04-19T13:27:53.929Z",
+      "is_active": true,
+      "email_verified": true
+    },
+    {
+      "id": "mo5swqq7hl0qj1ry68f",
+      "firstName": "Sarah",
+      "lastName": "Johnson",
+      "email": "sarah.volunteer@example.com",
+      "phone": "+0987654321",
+      "password": "$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
+      "role": "volunteer",
+      "age": 28,
+      "created_at": "2026-04-19T13:27:53.935Z",
+      "updated_at": "2026-04-19T13:27:53.935Z",
+      "is_active": true,
+      "email_verified": true
+    }
+  ],
+  "elders": [
+    {
+      "id": "mo5swqqaxy2fppmxif",
+      "user_id": "mo5swqpwecqewbxyel",
+      "address_street": "123 Main St",
+      "address_city": "Chennai",
+      "address_state": "Tamil Nadu",
+      "address_pincode": "600001",
+      "emergency_contacts": [
+        {
+          "name": "Jane Smith",
+          "relation": "Daughter",
+          "phone": "+1111111111"
+        }
+      ],
+      "medical_conditions": [
+        "Hypertension",
+        "Diabetes"
+      ],
+      "preferences": {
+        "language": "English",
+        "preferred_time": "morning"
+      },
+      "created_at": "2026-04-19T13:27:53.938Z",
+      "updated_at": "2026-04-19T13:27:53.938Z"
+    }
+  ],
+  "volunteers": [
+    {
+      "id": "mo5swqqhi1lyyoklb0r",
+      "user_id": "mo5swqq7hl0qj1ry68f",
+      "skills": [
+        "medical",
+        "transport",
+        "companion"
+      ],
+      "availability_schedule": {
+        "weekdays": "9AM-5PM",
+        "weekends": "10AM-2PM"
+      },
+      "background_check_status": "verified",
+      "service_radius": 10,
+      "hourly_rate": 100,
+      "created_at": "2026-04-19T13:27:53.945Z",
+      "updated_at": "2026-04-19T13:27:53.945Z",
+      "total_services_completed": 0,
+      "average_rating": 0,
+      "is_on_duty": false
+    }
+  ],
+  "services": [
+    {
+      "id": "service-1",
+      "service_name": "Medicine Delivery",
+      "service_category": "medical",
+      "base_price": 50,
+      "duration_minutes": 30,
+      "description": "Delivery of prescription medicines",
+      "requirements": {
+        "prescription_required": true
+      },
+      "is_active": true
+    },
+    {
+      "id": "service-2",
+      "service_name": "Grocery Shopping",
+      "service_category": "grocery",
+      "base_price": 75,
+      "duration_minutes": 60,
+      "description": "Assistance with grocery shopping",
+      "requirements": {
+        "shopping_list_required": true
+      },
+      "is_active": true
+    },
+    {
+      "id": "service-3",
+      "service_name": "Medical Appointment Transport",
+      "service_category": "transport",
+      "base_price": 100,
+      "duration_minutes": 90,
+      "description": "Transport to medical appointments",
+      "requirements": {
+        "wheelchair_accessible": false
+      },
+      "is_active": true
+    },
+    {
+      "id": "service-4",
+      "service_name": "Companion Care",
+      "service_category": "companion",
+      "base_price": 60,
+      "duration_minutes": 120,
+      "description": "Companionship and emotional support",
+      "requirements": {
+        "background_check_required": true
+      },
+      "is_active": true
+    },
+    {
+      "id": "service-5",
+      "service_name": "Emergency Response",
+      "service_category": "emergency",
+      "base_price": 150,
+      "duration_minutes": 30,
+      "description": "Emergency assistance and response",
+      "requirements": {
+        "emergency_training_required": true
+      },
+      "is_active": true
+    }
+  ],
+  "bookings": [],
+  "reviews": [],
+  "emergency_alerts": [],
+  "payments": [],
+  "notifications": []
+}
