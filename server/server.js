@@ -1,7 +1,11 @@
+import dns from "dns";
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { connectToDatabase } from './utils/db.js';
+
+// Change DNS
+dns.setServers(["1.1.1.1", "8.8.8.8"]);
 
 // Import routes
 import authRoutes from './routes/auth-mongo.js';
